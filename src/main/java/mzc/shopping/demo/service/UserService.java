@@ -1,10 +1,7 @@
 package mzc.shopping.demo.service;
-
+import mzc.shopping.demo.dto.AdminSignUpRequest;
 import lombok.RequiredArgsConstructor;
-import mzc.shopping.demo.dto.LoginRequest;
-import mzc.shopping.demo.dto.SignUpRequest;
-import mzc.shopping.demo.dto.TokenResponse;
-import mzc.shopping.demo.dto.UserResponse;
+import mzc.shopping.demo.dto.*;
 import mzc.shopping.demo.entity.User;
 import mzc.shopping.demo.repository.UserRepository;
 import mzc.shopping.demo.security.JwtTokenProvider;
@@ -95,14 +92,31 @@ public class UserService {
         }
 
         return UserResponse.from(user);
-
-
-
     }
 
+    // 관리자 회원가입
+    @Transactional
+    public UserResponse adminSignUp(AdminSignUpRequest request) {
+        // 관리자 코드 검증
+        if (!"ADMIN2024".equals(request.getAdminCode())) {
+            throw new IllegalArgumentException("관리자 인증 코드가 올바르지 않습니다");
+        }
 
+        // 이메일 중복 체크
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("이미 사용 중인 이메일입니다");
+        }
 
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
+                .phone(request.getPhone())
+                .role(User.Role.ADMIN)
+                .build();
 
-
+        User savedUser = userRepository.save(user);
+        return UserResponse.from(savedUser);
+    }
 
 }

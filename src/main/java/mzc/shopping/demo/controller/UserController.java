@@ -2,10 +2,7 @@ package mzc.shopping.demo.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mzc.shopping.demo.dto.LoginRequest;
-import mzc.shopping.demo.dto.SignUpRequest;
-import mzc.shopping.demo.dto.TokenResponse;
-import mzc.shopping.demo.dto.UserResponse;
+import mzc.shopping.demo.dto.*;
 
 import mzc.shopping.demo.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -69,6 +66,13 @@ public class UserController {
 
 
     }
+
+   @PostMapping("/admin/signup")
+   public ResponseEntity<UserResponse> adminSignUp(@Valid @RequestBody AdminSignUpRequest request) {
+        UserResponse response =userService.adminSignUp(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+   }
+
 
 
 }

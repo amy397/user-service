@@ -6,11 +6,13 @@ import mzc.shopping.demo.dto.LoginRequest;
 import mzc.shopping.demo.dto.SignUpRequest;
 import mzc.shopping.demo.dto.TokenResponse;
 import mzc.shopping.demo.dto.UserResponse;
+
 import mzc.shopping.demo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -42,4 +44,31 @@ public class UserController {
     public ResponseEntity<Map<String, String>> health() {
         return ResponseEntity.ok(Map.of("status", "UP", "service", "user-service"));
     }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        List<UserResponse> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @DeleteMapping("{/id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    //사용자 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Long id,
+            @RequestBody SignUpRequest request
+    ) {
+        UserResponse response = userService.updateUser(id, request);
+        return ResponseEntity.ok(response);
+
+
+    }
+
+
 }

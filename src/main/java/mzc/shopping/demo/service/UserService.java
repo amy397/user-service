@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -62,4 +65,44 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
         return UserResponse.from(user);
     }
+
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+    }
+        // 사용자 삭제
+        @Transactional
+        public void deleteUser(Long id) {
+            if (!userRepository.existsById(id)) {
+                throw new IllegalArgumentException("사용자를 찾을 수 없습니다");
+            }
+            userRepository.deleteById(id);
+        }
+
+
+    // 사용자 정보 수정
+    @Transactional
+    public UserResponse updateUser(Long id, SignUpRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+
+        if (request.getName() != null) {
+            user.setName(request.getName());
+        }
+        if (request.getPhone() != null) {
+            user.setPhone(request.getPhone());
+        }
+
+        return UserResponse.from(user);
+
+
+
+    }
+
+
+
+
+
+
 }

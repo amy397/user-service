@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mzc.shopping.demo.dto.*;
 
+import mzc.shopping.demo.entity.User;
 import mzc.shopping.demo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +73,13 @@ public class UserController {
         UserResponse response =userService.adminSignUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        return userService.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
 

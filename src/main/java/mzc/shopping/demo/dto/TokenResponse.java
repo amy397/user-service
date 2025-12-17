@@ -15,14 +15,14 @@ public class TokenResponse {
 private String accessToken;
 private String tokenType;
 private Long expiresIn;
-private User user;
+private UserResponse user;
 
-public static TokenResponse of(String token, Long expiresIn, User user) {
+    public static TokenResponse of(String token, Long expiresIn, User user) {
     return TokenResponse.builder()
             .accessToken(token)
             .tokenType("Bearer")
             .expiresIn(expiresIn)
-            .user(user)
+            .user(UserResponse.from(user))
             .build();
 }
 

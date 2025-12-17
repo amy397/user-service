@@ -49,7 +49,7 @@ public class UserService {
         }
 
         String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
-        return TokenResponse.of(token, jwtTokenProvider.getExpiration());
+        return TokenResponse.of(token, jwtTokenProvider.getExpiration(),user);
     }
 
     public UserResponse getUserById(Long id) {

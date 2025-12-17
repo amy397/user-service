@@ -40,6 +40,7 @@ public class UserService {
         return UserResponse.from(savedUser);
     }
 
+
     public TokenResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다"));
@@ -48,9 +49,10 @@ public class UserService {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다");
         }
 
-        String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
-        return TokenResponse.of(token, jwtTokenProvider.getExpiration(),user);
+        String token = jwtTokenProvider.createToken(user.getId(), user.getEmail(), user.getRole().name());  // 수정!
+        return TokenResponse.of(token, jwtTokenProvider.getExpiration(), user);
     }
+
 
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)

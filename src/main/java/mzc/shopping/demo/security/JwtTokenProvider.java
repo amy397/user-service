@@ -23,8 +23,7 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init() {
-        String encoded = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        key = Keys.hmacShaKeyFor(encoded.getBytes());
+        key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String createToken(String email, String role,Long userId) {
